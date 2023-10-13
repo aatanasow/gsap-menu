@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GSAP Menu Anim</title>
+    <style>
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+      }
+      * {
+        position: relative;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #eee;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        overflow: hidden;
+        padding: 10vh 0;
+      }
+      .menu {
+        width: clamp(600px, 90vw, 1200px);
+        min-width: 600px;
+        height: 124px;
+        background: #000;
+        border-radius: 40px;
+        padding: 0 clamp(150px, 15vw, 300px);
+        /* clip-path: path(
+          "M265 101.055C217.285 101.055 217.308 191 132.5 191C47.6923 191 47.7149 101 0 101C0 45.4954 77.0903 0 132.5 0C187.91 0 265 45.5506 265 101.055Z"
+        );*/
+      }
+      .icons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        height: 100%;
+        z-index: 2;
+      }
+      .icon {
+        cursor: pointer;
+      }
+      .icon svg {
+        overflow: visible;
+      }
+
+      .mask {
+        position: absolute;
+        z-index: 1;
+        top: -101px;
+        /* transform: translateX(-41%);
+        transform-origin: center; */
+      }
+      .mask svg {
+        transform: translateX(-41%);
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script>
+      function init() {
+        let mask = document.querySelector(".mask");
+        let navItems = gsap.utils.toArray(".icon");
+        let currentItem = navItems[0];
+
+        function initNav() {
+          gsap.set(mask, {
+            x: currentItem.offsetLeft,
+          });
+          gsap.set(currentItem, { y: -60 });
+          gsap.set(currentItem.querySelector("svg"), { fill: "#FFBE15" });
+          gsap.set(currentItem.querySelector(".svg-circle"), {
+            scale: 12.5,
+            transformOrigin: "50% 50%",
+          });
+        }
+
+        navItems.forEach((element, index) => {
+          var anim;
+          element.addEventListener("mousedown", function () {
+            if (element !== currentItem) {
+              anim.pause();
+              gsap.set(element.querySelector("svg"), {
+                scale: 1,
+                fill: "#FFFFFF",
+              });
+              gsap.to(mask, {
+                duration: 0.3,
+                overwrite: true,
+                x: element.offsetLeft,
+              });
+              gsap.to(element, {
+                y: -60,
+                duration: 1,
+                ease: "elastic.out(1, 0.5)",
+              });
+              gsap.to(currentItem, {
+                y: 0,
+                duration: 0.5,
+                ease: "elastic.out(1, 0.5)",
+              });
+              gsap.to(element.querySelector("svg"), {
+                fill: "#FFBE15",
+                duration: 0.5,
+              });
+              gsap.to(currentItem.querySelector("svg"), {
+                fill: "#FFFFFF",
+                duration: 0.5,
+              });
+              gsap.to(element.querySelector(".svg-circle"), {
+                scale: 12.5,
+                transformOrigin: "50% 50%",
+                duration: 0.5,
+                ease: "expo.out",
+              });
+              gsap.to(currentItem.querySelector(".svg-circle"), {
+                scale: 0,
+                duration: 0.5,
+                ease: "power4.out",
+              });
+              currentItem = element;
+            }
+          });
+          element.addEventListener("mouseenter", function () {
+            if (element !== currentItem) {
+              anim = gsap.to(element.querySelector("svg"), {
+                repeat: -1,
+                scale: 1.2,
+                fill: "#FFBE15",
+                duration: 0.5,
+                yoyo: true,
+              });
+            }
+          });
+          element.addEventListener("mouseleave", function () {
+            if (element !== currentItem) {
+              anim.pause();
+              gsap.set(element.querySelector("svg"), {
+                scale: 1,
+                fill: "#FFFFFF",
+              });
+            }
+          });
+        });
+
+        window.addEventListener("resize", initNav);
+
+        initNav();
+
+        gsap.to(mask, {
+          autoAlpha: 1,
+          duration: 0.2,
+          transformOrigin: "center top",
+        });
+      }
+
+      window.addEventListener("load", init);
+    </script>
+  </head>
+  <body>
+    <div class="menu">
+      <div class="icons">
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="49"
+            height="56"
+            viewBox="0 0 49 56"
+            fill="white"
+          >
+            <circle class="svg-circle" cx="25" cy="28" r="5" fill="black" />
+            <path
+              d="M27.3053 1.17644C25.7312 -0.392147 23.2688 -0.392147 21.6947 1.17644L1.91704 20.8848C0.69335 22.1042 0 23.8008 0 25.5757V49.5444C0 53.1096 2.74224 56 6.125 56H12.25C15.6328 56 18.375 53.1096 18.375 49.5444V38.785C18.375 37.5967 19.2891 36.6332 20.4167 36.6332H28.5833C29.7109 36.6332 30.625 37.5967 30.625 38.785V49.5444C30.625 53.1096 33.3674 56 36.75 56H42.875C46.2576 56 49 53.1096 49 49.5444V25.5757C49 23.8008 48.3067 22.1042 47.0829 20.8848L27.3053 1.17644Z"
+            />
+          </svg>
+        </div>
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="42"
+            height="56"
+            viewBox="0 0 42 56"
+            fill="white"
+          >
+            <circle class="svg-circle" cx="21" cy="28" r="5" fill="black" />
+            <path
+              d="M23.625 2.60975C23.625 0.00663211 20.2727 -0.974461 18.7961 1.18351C5.25 20.9836 24.5 21.875 24.5 31.5C24.5 35.3971 21.3161 38.5503 17.407 38.4989C13.5603 38.4497 10.5 35.2428 10.5 31.3961V22.0435C10.5 19.67 7.60484 18.5183 5.96859 20.2388C3.04062 23.3144 0 28.583 0 35C0 46.5795 9.42047 56 21 56C32.5795 56 42 46.5795 42 35C42 16.3746 23.625 13.8907 23.625 2.60975Z"
+            />
+          </svg>
+        </div>
+        <div class="icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="56"
+            height="56"
+            viewBox="0 0 56 56"
+            fill="white"
+          >
+            <circle class="svg-circle" cx="28" cy="28" r="5" fill="black" />
+            <path
+              d="M28.011 32.1847C30.3305 32.1847 32.2109 30.3052 32.2109 27.9867C32.2109 25.6682 30.3305 23.7887 28.011 23.7887C25.6915 23.7887 23.8111 25.6682 23.8111 27.9867C23.8111 30.3052 25.6915 32.1847 28.011 32.1847Z"
+            />
+            <path
+              d="M55.7023 23.2849L53.4903 16.2323C53.2515 15.4172 52.8509 14.6585 52.3124 14.0015C51.7738 13.3445 51.1085 12.8027 50.3559 12.4083C49.6034 12.0139 48.779 11.775 47.9321 11.706C47.0852 11.6369 46.2331 11.739 45.4265 12.0063L44.4746 12.3141C43.7288 12.5605 42.9345 12.6231 42.1593 12.4964C41.3841 12.3697 40.6511 12.0575 40.0227 11.5865L39.7147 11.3626C39.1015 10.8935 38.6071 10.2868 38.2716 9.59167C37.936 8.8965 37.7685 8.13223 37.7827 7.36049V6.57687C37.7964 4.81937 37.1116 3.12832 35.8788 1.87511C35.2924 1.28305 34.5948 0.812626 33.826 0.490839C33.0572 0.169051 32.2324 0.00224507 31.3989 0H24.2591C22.546 0.022127 20.9111 0.719795 19.7102 1.94111C18.5093 3.16242 17.8397 4.80848 17.8473 6.52089V7.19257C17.8446 8.00495 17.6595 8.80636 17.3058 9.53776C16.952 10.2691 16.4386 10.9119 15.8033 11.4186L15.4393 11.6984C14.7375 12.2291 13.9166 12.5804 13.0481 12.7219C12.1795 12.8633 11.2895 12.7906 10.4554 12.51C9.68943 12.2451 8.87759 12.1382 8.06906 12.1959C7.26054 12.2537 6.47213 12.4748 5.75157 12.8459C5.00134 13.2181 4.33577 13.7406 3.79627 14.381C3.25677 15.0213 2.8549 15.7658 2.61565 16.5681L0.31971 23.8446C-0.212718 25.4852 -0.0761758 27.2695 0.699686 28.81C1.47555 30.3506 2.82809 31.523 4.4636 32.0727H4.91159C5.66605 32.3553 6.34321 32.8118 6.88808 33.405C7.43295 33.9983 7.83018 34.7116 8.04751 35.4871L8.2155 35.9349C8.52763 36.7916 8.63201 37.7102 8.52006 38.6151C8.40811 39.52 8.08304 40.3854 7.57152 41.1404C6.53615 42.5498 6.09944 44.3108 6.35637 46.0404C6.6133 47.7699 7.54309 49.3281 8.94349 50.376L14.7393 54.7699C15.8368 55.5674 17.1625 55.9895 18.5192 55.9733C18.8824 56.0089 19.2481 56.0089 19.6112 55.9733C20.4515 55.8108 21.2498 55.4788 21.9574 54.9976C22.6651 54.5164 23.2672 53.8961 23.7271 53.1747L24.3711 52.2511C24.8228 51.6034 25.4206 51.0709 26.1161 50.6966C26.8115 50.3223 27.5853 50.1166 28.375 50.0961C29.2025 50.0758 30.0217 50.2653 30.7562 50.647C31.4906 51.0288 32.1163 51.5902 32.5749 52.2791L32.9109 52.7549C33.3883 53.465 34.006 54.07 34.7261 54.5325C35.4462 54.995 36.2534 55.3053 37.098 55.4442C37.9426 55.5832 38.8067 55.5479 39.6371 55.3404C40.4676 55.133 41.2467 54.7579 41.9266 54.2382L47.6105 49.9842C48.9544 48.9409 49.8481 47.4233 50.1084 45.7425C50.3687 44.0617 49.9759 42.3451 49.0104 40.9445L48.2825 39.881C47.8447 39.2049 47.558 38.4424 47.4421 37.6454C47.3261 36.8485 47.3835 36.0359 47.6105 35.2632C47.8418 34.436 48.2711 33.6776 48.8614 33.0534C49.4517 32.4293 50.1851 31.9582 50.9984 31.6809L51.5584 31.485C53.1787 30.923 54.517 29.7533 55.2903 28.223C56.0635 26.6928 56.2113 24.922 55.7023 23.2849ZM28.011 37.782C26.0728 37.782 24.1781 37.2075 22.5665 36.1312C20.955 35.0549 19.6989 33.525 18.9572 31.7352C18.2155 29.9453 18.0214 27.9758 18.3995 26.0757C18.7777 24.1756 19.711 22.4302 21.0815 21.0603C22.452 19.6904 24.1982 18.7575 26.0992 18.3795C28.0001 18.0016 29.9705 18.1956 31.7612 18.937C33.5519 19.6783 35.0824 20.9338 36.1592 22.5447C37.236 24.1555 37.8107 26.0493 37.8107 27.9867C37.8107 30.5845 36.7783 33.076 34.9405 34.913C33.1026 36.75 30.61 37.782 28.011 37.782Z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="mask">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="265"
+          height="191"
+          viewBox="0 0 265 191"
+          fill="#eee"
+        >
+          <path
+            d="M265 101.055C217.285 101.055 217.308 191 132.5 191C47.6923 191 47.7149 101 0 101C0 45.4954 77.0903 0 132.5 0C187.91 0 265 45.5506 265 101.055Z"
+          />
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>
