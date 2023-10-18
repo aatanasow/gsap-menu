@@ -1,0 +1,55 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
+* {
+  position: relative;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #eee;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  overflow: hidden;
+  padding: 10vh 0;
+}
+.menu {
+  width: clamp(600px, 90vw, 1200px);
+  min-width: 600px;
+  height: 124px;
+  background: #000;
+  border-radius: 40px;
+  padding: 0 clamp(150px, 15vw, 300px);
+  /* clip-path: path(
+          "M265 101.055C217.285 101.055 217.308 191 132.5 191C47.6923 191 47.7149 101 0 101C0 45.4954 77.0903 0 132.5 0C187.91 0 265 45.5506 265 101.055Z"
+        );*/
+}
+.icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  height: 100%;
+  z-index: 2;
+}
+.icon {
+  cursor: pointer;
+}
+.icon svg {
+  overflow: visible;
+}
+
+.mask {
+  position: absolute;
+  z-index: 1;
+  top: -101px;
+  /* transform: translateX(-41%);
+        transform-origin: center; */
+}
+.mask svg {
+  transform: translateX(-41%);
+}
